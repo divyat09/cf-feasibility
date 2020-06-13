@@ -238,7 +238,7 @@ res[dataset_name]['cont-prox']= compute_eval_metrics_adult( methods, base_model_
 res[dataset_name]['cat-prox']= compute_eval_metrics_adult( methods, base_model_dir, encoded_size, pred_model, vae_test_dataset, d, normalise_weights, mad_feature_weights, div_case, 4, sample_range, 'adult-cat-proximity-score' )
 res[dataset_name]['im']= compute_eval_metrics_adult( methods, base_model_dir, encoded_size, pred_model, vae_test_dataset, d, normalise_weights, mad_feature_weights, div_case, 5, sample_range, 'im-score' )
 
-
+'''
 sample_range= [1,2,4,8,10]
 div_case=1
 
@@ -259,6 +259,18 @@ res[dataset_name]['const-score']= compute_eval_metrics_adult( methods, base_mode
 res[dataset_name]['cont-prox']= compute_eval_metrics_adult( methods, base_model_dir, encoded_size, pred_model, vae_test_dataset, d, normalise_weights, mad_feature_weights, div_case, 3, sample_range, 'adult-cont-proximity-score' )
 res[dataset_name]['cat-prox']= compute_eval_metrics_adult( methods, base_model_dir, encoded_size, pred_model, vae_test_dataset, d, normalise_weights, mad_feature_weights, div_case, 4, sample_range, 'adult-cat-proximity-score' )
 res[dataset_name]['im']= compute_eval_metrics_adult( methods, base_model_dir, encoded_size, pred_model, vae_test_dataset, d, normalise_weights, mad_feature_weights, div_case, 5, sample_range, 'im-score' )
+'''
+
+# Converting to JSON
+for dataset_name in res.keys():
+    for metric in res[dataset_name].keys():
+        for method in res[dataset_name][metric].keys():
+            if isinstance( res[dataset_name][metric][method][0], np.ndarray ):
+                res[dataset_name][metric][method]= [l.tolist() for l in res[dataset_name][metric][method]]
+
+# Writing to sample.json 
+with open("r_plot/plot_dict.json", "w") as outfile: 
+    json.dump(res, outfile )
 
 
 '''
@@ -403,7 +415,7 @@ for metric in eval_metric:
     lgd= plt.legend(  flip(handles, 2), flip(labels, 2), loc='right', fontsize=fsize, bbox_to_anchor=(1.2, -0.35), ncol=2, )
     text = ax.text(-0.2,1.05, "", transform=ax.transAxes)
     plt.tick_params(labelsize=fsize)
-    plt.savefig('results/icml/'+  str(metric) +'.jpg', bbox_extra_artists=(lgd, text), bbox_inches='tight', dpi=100)
+    plt.savefig('results/final/'+  str(metric) +'.jpg', bbox_extra_artists=(lgd, text), bbox_inches='tight', dpi=100)
 #     else:
 #         plt.tick_params(labelsize=fsize)
 #         plt.savefig('results/icml/'+  str(metric) +'.jpg', bbox_inches='tight')
@@ -417,73 +429,73 @@ Adult Oracle Supervision Analysis
 '''
     
     
-fsize=21
-linewidth=4.0
+# fsize=21
+# linewidth=4.0
 
-dataset_name='adult-supervision'
-x_label=[ 'Sample-25-CF-10', 'Sample-50-CF-10',  'Sample-75-CF-10', 'Sample-100-CF-10' ]
-x_ticks=['25', '50', '75', '100']
+# dataset_name='adult-supervision'
+# x_label=[ 'Sample-25-CF-10', 'Sample-50-CF-10',  'Sample-75-CF-10', 'Sample-100-CF-10' ]
+# x_ticks=['25', '50', '75', '100']
 
-eval_metric={}
-for metric in res[dataset_name].keys():
-    eval_metric[metric]=1
-eval_metric= list(eval_metric.keys())
-print(eval_metric)
+# eval_metric={}
+# for metric in res[dataset_name].keys():
+#     eval_metric[metric]=1
+# eval_metric= list(eval_metric.keys())
+# print(eval_metric)
 
-for metric in eval_metric:
-    fig = plt.figure(figsize=(9.5,6.0))    
-    idx=0
-    for dataset_name in res.keys():
+# for metric in eval_metric:
+#     fig = plt.figure(figsize=(9.5,6.0))    
+#     idx=0
+#     for dataset_name in res.keys():
         
-        if dataset_name != 'adult-supervision':
-            continue
+#         if dataset_name != 'adult-supervision':
+#             continue
         
-        if metric in res[dataset_name].keys():
-            plot_y=[]
-            plot_y_err=[]
-            plot_x= x_label
-            for method in plot_x:
-                if method in res[dataset_name][metric].keys():
-                    arr= np.array( res[dataset_name][metric][method] )
-                    arr= np.mean( arr, axis=1)
-                    plot_y.append( np.mean(arr) )
-                    plot_y_err.append( np.std(arr) )       
-                else:
-                    plot_y.append(0)
-                    plot_y_err.append(0)
+#         if metric in res[dataset_name].keys():
+#             plot_y=[]
+#             plot_y_err=[]
+#             plot_x= x_label
+#             for method in plot_x:
+#                 if method in res[dataset_name][metric].keys():
+#                     arr= np.array( res[dataset_name][metric][method] )
+#                     arr= np.mean( arr, axis=1)
+#                     plot_y.append( np.mean(arr) )
+#                     plot_y_err.append( np.std(arr) )       
+#                 else:
+#                     plot_y.append(0)
+#                     plot_y_err.append(0)
 
-                if metric=='validity':
-#                     plt.title('Target Class Valid CF', fontsize=fsize)
-                    plt.xlabel('Labelled Set Size', fontsize=fsize)
-                    plt.ylabel('Target-Class Validity',  fontsize=fsize)                    
-                    plt.ylim(50,100)
-                elif metric=='const-score':
-#                     plt.title('Constraint Valid CF', fontsize=fsize)
-                    plt.ylabel('Constraint Feasibility Score', fontsize=fsize)
-                    plt.xlabel('Labelled Set Size', fontsize=fsize)
-                elif metric=='cont-prox':
-#                     plt.title('Continuous Proximity Score', fontsize=fsize)
-                    plt.ylabel('Continuous Proximity', fontsize=fsize)
-                    plt.xlabel('Labelled Set Size', fontsize=fsize)
-                    plt.ylim(-8.0,-1.0)
-                elif metric=='cat-prox':
-#                     plt.title('Categorical Proximity Score', fontsize=fsize)
-                    plt.ylabel('Categorical Proximity', fontsize=fsize)   
-                    plt.xlabel('Labelled Set Size', fontsize=fsize)
-                    plt.ylim(-4.0,-1.0)
-                elif metric=='im':
-#                     plt.title('Categorical Proximity Score', fontsize=fsize)
-                    plt.ylabel('Interpretability Score', fontsize=fsize)   
-                    plt.xlabel('Labelled Set Size', fontsize=fsize)
+#                 if metric=='validity':
+# #                     plt.title('Target Class Valid CF', fontsize=fsize)
+#                     plt.xlabel('Labelled Set Size', fontsize=fsize)
+#                     plt.ylabel('Target-Class Validity',  fontsize=fsize)                    
+#                     plt.ylim(50,100)
+#                 elif metric=='const-score':
+# #                     plt.title('Constraint Valid CF', fontsize=fsize)
+#                     plt.ylabel('Constraint Feasibility Score', fontsize=fsize)
+#                     plt.xlabel('Labelled Set Size', fontsize=fsize)
+#                 elif metric=='cont-prox':
+# #                     plt.title('Continuous Proximity Score', fontsize=fsize)
+#                     plt.ylabel('Continuous Proximity', fontsize=fsize)
+#                     plt.xlabel('Labelled Set Size', fontsize=fsize)
+#                     plt.ylim(-8.0,-1.0)
+#                 elif metric=='cat-prox':
+# #                     plt.title('Categorical Proximity Score', fontsize=fsize)
+#                     plt.ylabel('Categorical Proximity', fontsize=fsize)   
+#                     plt.xlabel('Labelled Set Size', fontsize=fsize)
+#                     plt.ylim(-4.0,-1.0)
+#                 elif metric=='im':
+# #                     plt.title('Categorical Proximity Score', fontsize=fsize)
+#                     plt.ylabel('Interpretability Score', fontsize=fsize)   
+#                     plt.xlabel('Labelled Set Size', fontsize=fsize)
                     
-            plt.xticks(range(len(x_ticks)), x_ticks, fontsize=0.75*fsize)
-            plt.plot(plot_x, plot_y, '--', color='grey', linewidth=linewidth)
-            plt.errorbar(plot_x, plot_y, yerr=plot_y_err, fmt='o', elinewidth=linewidth, markeredgewidth=linewidth, capsize=linewidth )
+#             plt.xticks(range(len(x_ticks)), x_ticks, fontsize=0.75*fsize)
+#             plt.plot(plot_x, plot_y, '--', color='grey', linewidth=linewidth)
+#             plt.errorbar(plot_x, plot_y, yerr=plot_y_err, fmt='o', elinewidth=linewidth, markeredgewidth=linewidth, capsize=linewidth )
                 
-        idx=+1
+#         idx=+1
     
-    dataset_name='adult-supervision'
-    plt.tick_params(labelsize=fsize)
-    plt.savefig('results/icml/'+ dataset_name + '-' + str(metric) +'.jpg', dpi=100)
-    plt.show()
-    plt.clf()
+#     dataset_name='adult-supervision'
+#     plt.tick_params(labelsize=fsize)
+#     plt.savefig('results/icml/'+ dataset_name + '-' + str(metric) +'.jpg', dpi=100)
+#     plt.show()
+#     plt.clf()

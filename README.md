@@ -20,6 +20,8 @@ Contains the processed data files for all the datasets
 
 Utilizes the pre trained models (models/) and datasets (data/) to reproduce the results mentioned in the paper. The results are stored in the directory /results
 
+It also generates a file 'plot_dict.json' in the directory r_plots/; where you may convert it to plotdf.csv file and then execute 'plot_figures.R' script to get better graphs stored in the directory /results 
+
 - base-generative-cf.py
 
 Implementation of BaseGenCF for all datasets
@@ -73,6 +75,10 @@ Usage: python3 contrastive_explanations.py --dataset_name bn1 --htune 0 --train_
 - timeit-base-generative-cf.py
 Computing the training and evaluaiton time of BaseGenCF
 Usage: python3 timeit-base-generative-cf.py --htune 0 --batch_size 64 --epoch 50 --dataset_name bn1 --margin 0.1  --validity_reg 10 --cf_path bn1-margin-0.014-validity_reg-54.0-epoch-50-base-gen.pth
+
+- timeit-oracle-generative-cf.py
+Computing the training and evaluation time of Example-based CF
+Usage: python3 timeit-oracle-generative-cf.py --htune 0 --batch_size 64 --epoch 50 --dataset_name bn1 --cf_path bn1-margin-0.014-validity_reg-54.0-epoch-50-base-gen.pth --oracle_data bn1-fine-tune-size-100-upper-lim-10-good-cf-set.json --margin 0.1 --validity_reg 10 --oracle_reg 10
 
 - scripts/
 
