@@ -3,7 +3,7 @@ Code accompanying the paper [Preserving Causal Constraints in Counterfactual Exp
 
 # DiCE
 
-This work is also being integerated with [DiCE](https://www.microsoft.com/en-us/research/project/dice/), an open source library for explaining ML models. Please check the [feasible-cf branch](https://github.com/microsoft/DiCE/tree/feasible-cf) and this [tutorial](https://github.com/microsoft/DiCE/blob/feasible-cf/notebooks/DiCE_getting_started_feasible.ipynb) on DiCE for updates regarding the same. 
+This work is also being integerated with [DiCE](https://github.com/interpretml/DiCE), an open source library for explaining ML models. Please check the this [tutorial](https://github.com/interpretml/DiCE/blob/master/docs/notebooks/DiCE_getting_started_feasible.ipynb) and follow DiCE for updates regarding the same. 
 
 # Cite
 ```bibtex
